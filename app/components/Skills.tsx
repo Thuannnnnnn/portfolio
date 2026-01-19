@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 
 const skills = {
   frontend: {
@@ -45,6 +45,15 @@ export default function Skills() {
     offset: ["start end", "end start"]
   })
 
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   const y1 = useTransform(scrollYProgress, [0, 1], [0, -100])
   const y2 = useTransform(scrollYProgress, [0, 1], [0, 100])
   const y3 = useTransform(scrollYProgress, [0, 1], [0, -50])
@@ -64,7 +73,7 @@ export default function Skills() {
 
         <div className="grid md:grid-cols-3 gap-8 [perspective:1000px]">
           {/* Frontend Axis */}
-          <motion.div style={{ y: y1 }} className="space-y-6">
+          <motion.div style={{ y: isMobile ? 0 : y1 }} className="space-y-6">
             <h3 className={`text-2xl font-bold ${skills.frontend.textColor} text-center mb-8`}>Frontend</h3>
             {skills.frontend.items.map((item, idx) => (
               <SkillCard key={idx} item={item} color="violet" />
@@ -72,7 +81,7 @@ export default function Skills() {
           </motion.div>
 
           {/* Backend Axis */}
-          <motion.div style={{ y: y2 }} className="space-y-6 md:mt-12">
+          <motion.div style={{ y: isMobile ? 0 : y2 }} className="space-y-6 md:mt-12">
             <h3 className={`text-2xl font-bold ${skills.backend.textColor} text-center mb-8`}>Backend</h3>
             {skills.backend.items.map((item, idx) => (
               <SkillCard key={idx} item={item} color="fuchsia" />
@@ -80,7 +89,7 @@ export default function Skills() {
           </motion.div>
 
           {/* DevOps Axis */}
-          <motion.div style={{ y: y3 }} className="space-y-6">
+          <motion.div style={{ y: isMobile ? 0 : y3 }} className="space-y-6">
             <h3 className={`text-2xl font-bold ${skills.devops.textColor} text-center mb-8`}>Quality & DevOps</h3>
             {skills.devops.items.map((item, idx) => (
               <SkillCard key={idx} item={item} color="orange" />
